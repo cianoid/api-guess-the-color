@@ -10,12 +10,17 @@ git clone https://github.com/cianoid/api-guess-the-color.git
 
 # Создание .env-файла
 
-Создайте .env-файл в папке ```api-guess-the-color/guess_the_color/```
+Создайте .env-файл и заполните его
+
+Путь к файлу:
+```
+api-guess-the-color/guess_the_color/.env
+```
 
 Пример заполнения файла:
 ```
 SECRET_KEY=djtre-raskljdio2ango-seee3452asdo3R$@TG%$
-DEBUG=0
+DEBUG=1
 ALLOWED_HOSTS=localhost
 DB_ENGINE=django.db.backends.sqlite3
 DB_NAME=db/db.sqlite3 # файл должен лежать в папке db, если необходимо сохранять данные в volume Docker
@@ -54,6 +59,12 @@ cd guess_the_color
 pip install -r requirements.txt
 ```
 
+### Запуск тестов
+
+```
+python manage.py test
+```
+
 ### Миграции БД и запуск сервиса 
 
 ```
@@ -61,17 +72,11 @@ python manage.py migrate
 python manage.py runserver localhost:8000
 ```
 
-### Запуск тестов
-
-```
-python maange.py test
-```
-
 ## Запуск в контейнере Docker
 
 ```
-docker build -t guess_the_color:latest .
-docker run --name guess_the_color -d -p 8000:8000 guess_the_color
+docker build -t guess_the_color .
+docker run --env-file .env --name guess_the_color -it -p 8000:8000 guess_the_color
 ```
 
 ## Запуск через docker-compose
@@ -79,6 +84,8 @@ docker run --name guess_the_color -d -p 8000:8000 guess_the_color
 В проекте подготовлен образ сервиса и загружен на Docker Hub. Проект запускается в двух контейнерах (backend, nginx) и слушает запросы на порту 8000
 
 Для запуска необходимо скопировать файл .env в директорию **guess_infra** и выполнить в ней же следующую команду
+
+Перед запуском проекта можно заменить значение DEBUG на **0** в файле .env
 
 ```
 docker-compose up -d
