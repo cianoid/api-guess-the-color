@@ -1,0 +1,70 @@
+openapi: 3.0.2
+info:
+  title: 'Guess the Color API'
+  version: ''
+  description: |
+    запросы к API начинаются с `/api/v1.0/`
+
+    # Описание
+    Проект **Guess the Color** предназначен для угадывания цвета по номеру предмета и группы. В группе 100 предметов: синих сильно больше чем зеленых, а зеленых немного больше чем красных.
+
+servers:
+  - url: /api/v1.0/
+
+tags:
+  - name: GUESS
+    description: Угадывание цвета
+
+paths:
+  /guess/:
+    post:
+      tags:
+        - GUESS
+      operationId: Угадывание цвета по номеру предмета
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - number
+              properties:
+                a:
+                  type: int
+                  minimum: 1
+                  maximum: 100
+                  description: Номер предмета
+                  example: 10
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  color_name:
+                    type: string
+                    readOnly: true
+                    description: 'Название цвета (синий, зеленый, красный)'
+                    example: 'string'
+          description: 'Удачное выполнение запроса'
+        '400':
+          content:
+            application/json:
+              examples:
+                Не переданы параметр number:
+                  value:
+                    number: ['Обязательное поле.']
+                Параметр number вне диапазона допустимых числе:
+                  value:
+                    a: ['Параметр number должен быть в диапазоне [1,100]']
+              schema:
+                type: object
+                properties:
+                  field_name:
+                    description: 'Название поля, в котором произошли ошибки. Таких полей может быть несколько'
+                    type: array
+                    items:
+                      type: string
+          description: 'Отсутствует обязательное поле или оно некорректно'
