@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: api_guess_backend
+    image: cianoid/guess_the_color:latest
+    restart: always
+    volumes:
+      - api_guess_static_backend_value:/app/static/
+      - api_guess_db_value:/app/db/
+    env_file:
+      - ./.env
+
+  nginx:
+    container_name: api_guess_nginx
+    image: nginx:1.19.3
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - api_guess_static_backend_value:/var/html/static_backend/
+      - api_guess_logs_value:/var/logs/
+    depends_on:
+      - backend
+volumes:
+  api_guess_logs_value:
+  api_guess_static_backend_value:
+  api_guess_db_value:
